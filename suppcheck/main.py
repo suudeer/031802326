@@ -5,9 +5,8 @@ import jieba
 import jieba.analyse
 from simhash import Simhash
 
-
 class SimHash(object):
-    def getBinStr(self, source):
+    def sgetbinStr(self, source):
         if source == "":
             return 0
         else:
@@ -22,25 +21,12 @@ class SimHash(object):
             x = bin(x).replace('0b', '').zfill(64)[-64:]
             return str(x)
 
-    def getWeight(self, source):
-        # 带有关键字的权重
-        return ord(source)
-
-    def unwrap_weight(self, arr):
-        ret = ""
-        for item in arr:
-            tmp = 0
-            if int(item) > 0:
-                tmp = 1
-            ret += str(tmp)
-        return ret
-
     def simHash(self, rawstr):
         seg = jieba.cut(rawstr)
         keywords = jieba.analyse.extract_tags("|".join(seg), topK=100, withWeight=True)
         ret = []
         for keyword, weight in keywords:
-            binstr = self.getBinStr(keyword)
+            binstr = self.sgetbinStr(keyword)
             keylist = []
             for c in binstr:
                 weight = math.ceil(weight)
@@ -49,8 +35,7 @@ class SimHash(object):
                 else:
                     keylist.append(-int(weight))
             ret.append(keylist)
-        # 对列表进行"降维"
-        rows = len(ret)
+        rows = len(ret) # 对列表进行"降维"
         cols = len(ret[0])
         result = []
         for i in range(cols):
@@ -64,27 +49,17 @@ class SimHash(object):
             result.append(tmp)
         return "".join(result)
 
-    def getDistince(self, hashstr1, hashstr2):
-        length = 0
-        for index, char in enumerate(hashstr1):
-            if char == hashstr2[index]:
-                continue
-            else:
-                length += 1
-        return length
-
 
 def textsimlarSimhash(text1, text2):
     simhash = SimHash()
     hash1 = simhash.simHash(text1)
     hash2 = simhash.simHash(text2)
-    distince = simhash.getDistince(hash1, hash2)
-    aa_simhash = Simhash(hash1)
-    bb_simhash = Simhash(hash2)
-    max_hashbit = max(len(bin(aa_simhash.value)), (len(bin(bb_simhash.value))))
+    t1_simhash = Simhash(hash1)
+    t2_simhash = Simhash(hash2)
+    distince = t1_simhash.distance(t2_simhash)
+    max_hashbit = max(len(bin(t1_simhash.value)), (len(bin(t2_simhash.value))))
     similar = 1 - distince / max_hashbit
     return (similar)
-
 
 def sppcheak(argv):
     try:
@@ -106,7 +81,6 @@ def sppcheak(argv):
     except FileNotFoundError:
         print("没找到文件，输入错误,请重新输入！")
     return 0
-
 
 # python main.py C:/Users/dell/Desktop/sim_0.8/orig.txt C:/Users/dell/Desktop/sim_0.8/orig_0.8_add.txt C:/Users/dell/Desktop/sim_0.81/orig_0.8_del.txt
 if __name__ == '__main__':
