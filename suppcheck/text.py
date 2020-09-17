@@ -1,5 +1,4 @@
 from main import textsimlarSimhash
-
 def testppcheck():
     t1 = open('orig.txt', 'rt', encoding='utf-8')
     text1 = t1.read()
