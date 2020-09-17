@@ -53,8 +53,8 @@ class SimHash(object):
 
 def textsimlarSimhash(text1, text2):
     simhash = SimHash()
-    hash1 = simhash.simHash(text1)
-    hash2 = simhash.simHash(text2)
+    hash1 = simhash.simHash(text1)#计算hash
+    hash2 = simhash.simHash(text2)#计算hash
     t1_simhash = Simhash(hash1)
     t2_simhash = Simhash(hash2)
     distince = t1_simhash.distance(t2_simhash)
@@ -68,19 +68,19 @@ def textsimlarSimhash(text1, text2):
 
 def sppcheak(argv):
     try:
-        f = open(argv[1], 'rt', encoding='utf-8')
-        g = open(argv[2], 'rt', encoding='utf-8')
+        f = open(argv[1], 'rt', encoding='utf-8')#打开源文件
+        g = open(argv[2], 'rt', encoding='utf-8')#打开检测文件
         su = open(argv[3], 'w+', encoding='utf-8')
-        f1 = f.read()
-        g1 = g.read()
-        similar = textsimlarSimhash(f1, g1)
-        similar = round(similar, 2)
+        f1 = f.read()#读取文件--字符串
+        g1 = g.read()#读取文件--字符串
+        similar = textsimlarSimhash(f1, g1)#计算相似度
+        similar = round(similar, 2)#保留小数
         strs = "两篇文章(" + argv[1] + " & " + argv[2] + ")\n相似率为："
         su.writelines(strs + str(similar))
         print("两篇文章相似率为：%.2f\n结果已经存入指定文档" % similar)
         f.close()
         g.close()
-        su.close()
+        su.close()#关闭文件
     except IndexError:
         print("输入错误,请重新输入！")
     except FileNotFoundError:
