@@ -5,6 +5,7 @@ import jieba
 import jieba.analyse
 from simhash import Simhash
 
+
 class SimHash(object):
     def sgetbinStr(self, source):
         if source == "":
@@ -35,7 +36,7 @@ class SimHash(object):
                 else:
                     keylist.append(-int(weight))
             ret.append(keylist)
-        rows = len(ret) # 对列表进行"降维"
+        rows = len(ret)  # 对列表进行"降维"
         cols = len(ret[0])
         result = []
         for i in range(cols):
@@ -58,8 +59,12 @@ def textsimlarSimhash(text1, text2):
     t2_simhash = Simhash(hash2)
     distince = t1_simhash.distance(t2_simhash)
     max_hashbit = max(len(bin(t1_simhash.value)), (len(bin(t2_simhash.value))))
-    similar = 1 - distince / max_hashbit
-    return (similar)
+    if max_hashbit == 0:
+        return 0
+    else:
+        ssimilar = 1 - distince / max_hashbit
+        return (ssimilar)
+
 
 def sppcheak(argv):
     try:
@@ -81,6 +86,7 @@ def sppcheak(argv):
     except FileNotFoundError:
         print("没找到文件，输入错误,请重新输入！")
     return 0
+
 
 # python main.py C:/Users/dell/Desktop/sim_0.8/orig.txt C:/Users/dell/Desktop/sim_0.8/orig_0.8_add.txt C:/Users/dell/Desktop/sim_0.81/orig_0.8_del.txt
 if __name__ == '__main__':
